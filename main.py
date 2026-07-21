@@ -18,7 +18,7 @@ today_month= dt.datetime.now().month
 today_day= dt.datetime.now().day
 today=(today_month,today_day)
 
-data= pandas.read_csv("./Programs/Birthday Wisher/birthdays.csv")
+data= pandas.read_csv("birthdays.csv")
 
 birthday_dict={
     (data_row["month"],data_row["day"]):data_row for (index,data_row) in data.iterrows()
@@ -26,7 +26,7 @@ birthday_dict={
 
 if today in birthday_dict:
     birthday_person=birthday_dict[today]
-    file_path=f"./Programs/Birthday Wisher/letter_templates/letter_{random.randint(1,3)}.txt"
+    file_path=f"letter_templates/letter_{random.randint(1, 3)}.txt"
     with open(file_path) as file:
         letter_content=file.read()
 
