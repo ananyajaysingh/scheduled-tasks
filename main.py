@@ -5,8 +5,41 @@
 # 4. Update birthdays.csv to contain today's month and day.
 # See the solution video in the 100 Days of Python Course for explainations.
 
+import datetime as dt
+import pandas
+import random
+import smtplib
+import os
 
-from datetime import datetime
+MY_EMAIL = os.environ.get("MY_EMAIL")
+MY_PASSWORD = os.environ.get("MY_PASSWORD")
+
+today_month= dt.datetime.now().month
+today_day= dt.datetime.now().day
+today=(today_month,today_day)
+
+data= pandas.read_csv("./Programs/Birthday Wisher/birthdays.csv")
+
+birthday_dict={
+    (data_row["month"],data_row["day"]):data_row for (index,data_row) in data.iterrows()
+}
+
+if today in birthday_dict:
+    birthday_person=birthday_dict[today]
+    file_path=f"./Programs/Birthday Wisher/letter_templates/letter_{random.randint(1,3)}.txt"
+    with open(file_path) as file:
+        letter_content=file.read()
+
+    letter_content= letter_content.replace("[NAME]",birthday_person["name"])
+    
+    with smtplib.SMTP("smtp.gmail.com") as connection:
+        connection.starttls()
+        connection.login(MY_EMAIL, MY_PASSWORD)
+        connection.sendmail(from_addr=MY_EMAIL,to_addrs=birthday_dict[today]["email"],msg=f"Subject:Happy Birthday\n\n{letter_content}")
+
+
+
+'''from datetime import datetime
 import pandas
 import random
 import smtplib
@@ -35,4 +68,4 @@ if today_tuple in birthdays_dict:
             from_addr=MY_EMAIL,
             to_addrs=birthday_person["email"],
             msg=f"Subject:Happy Birthday!\n\n{contents}"
-        )
+        )'''
